@@ -120,4 +120,27 @@ Arv * removeNo(Arv* arvore, int n){
         arvore->raiz = removeAux(arvore->raiz, n);
     }
 }
+
+void imprimirDecrescente(NoArv* Pai)
+{
+    if(Pai->dir!=NULL)
+    {
+        imprimir_in(Pai->dir);
+    }
+    printf("%d ",Pai->info);
+    if(Pai->esq!=NULL)
+    {
+        imprimir_in(Pai->esq);
+    }
+}
+
+void imprimirCrescente(NoArv* Pai){
+    if(Pai->esq!=NULL){
+        imprimir_in(Pai->esq);
+    }
+    printf("%d ",Pai->info);
+    if(Pai->dir!=NULL){
+        imprimir_in(Pai->dir);
+    }
+}
 #endif // ABB_H
