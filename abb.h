@@ -190,6 +190,46 @@ Venda criaVenda(Arv *arvVendas) {
     return new_venda;
 }
 
+void vendasAcimaAbaixoValor(NoArv *no, float valor,int op){
+    if(op){
+        if(no->info.valor < valor){
+            imprimirVenda(no->info);
+        }
+    }else{
+        if(no->info.valor > valor){
+            imprimirVenda(no->info);
+        }
+    }
+    if(no->dir != NULL){
+        vendasAcimaAbaixoValor(no->dir,valor,op);
+    }
+    if(no->esq != NULL){
+        vendasAcimaAbaixoValor(no->esq,valor,op);
+    }
+}
+
+int totalVendas(NoArv *no){
+    int nVendas = 0;
+    if(no->dir != NULL){
+        nVendas += totalVendas(no->dir) + 1;
+    }
+    if(no->esq != NULL){
+        nVendas += totalVendas(no->esq) + 1;
+    }
+    return nVendas;
+}
+
+float totalFaturamento(NoArv *no){
+        int nFaturamento = 0;
+    if(no->dir != NULL){
+        nFaturamento += totalVendas(no->dir) + no->info.valor;
+    }
+    if(no->esq != NULL){
+        nFaturamento += totalVendas(no->esq) +  no->info.valor;
+    }
+    return nFaturamento;
+}
+
 Arv* criaArvore(){
     Arv *aux;
     aux=(Arv*)malloc(sizeof(Arv));
