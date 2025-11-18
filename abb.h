@@ -2,6 +2,7 @@
 #define ABB_H
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 typedef struct data{
     int dia;
     int mes;
@@ -30,7 +31,7 @@ int generateRandomInt(){
 
 }
 
-NoArv* aux_buscaArvId(NoArv *no, int n){
+NoArv* buscaArvId(NoArv *no, int n){
     if(no != NULL){
         if(no->info.id > n){
             aux_buscaArv(no->esq,n);
@@ -43,17 +44,41 @@ NoArv* aux_buscaArvId(NoArv *no, int n){
     return NULL;
 }
 
-NoArv* buscaArvId(Arv *arvVendas, int id){
-    return aux_buscaArv(arvVendas->raiz,id);
-}
-NoArv* aux_buscaArvMatricula(NoArv *no, int n){
-    if(no->info)
+NoArv* buscaArvMatricula(NoArv *no, char m[5]){
+    if(strcmp(no->info.matricula,m) == 0){
+        return no;
+    }
+    if(no->dir !=NULL){
+        aux_buscaArvMatricula(no->dir,m);
+    }
+    if(no->esq != NULL){
+        aux_buscaArvMatricula(no->esq,m);
+    }
 }
 
-NoArv* buscaArvMatricula(Arv *arvVendas, int id){
-    return aux_buscaArv(arvVendas->raiz,id);
+void buscaImprimeMatricula(NoArv *no, char m[5]){
+    if(strcmp(no->info.matricula,m) == 0){
+        printf("\n\t%-3d | %*s | %*s |     %02d/%02d/%04d| %12s| %-5.2f\n",no->info.id,no->info.cliente,no->info.transacao.dia,no->info.transacao.mes,no->info.transacao.ano,no->info.valor);
+    }
+    if(no->dir !=NULL){
+        aux_buscaArvMatricula(no->dir,m);
+    }
+    if(no->esq != NULL){
+        aux_buscaArvMatricula(no->esq,m);
+    }
 }
 
+void buscaImprimeNome(NoArv *no, char m[50]){
+    if(strcmp(no->info.vendedor,m) == 0){
+        printf("\n\t%-3d | %*s | %*s |     %02d/%02d/%04d| %12s| %-5.2f\n",no->info.id,no->info.cliente,no->info.transacao.dia,no->info.transacao.mes,no->info.transacao.ano,no->info.valor);
+    }
+    if(no->dir !=NULL){
+        aux_buscaArvNome(no->dir,m);
+    }
+    if(no->esq != NULL){
+        aux_buscaArvNome(no->esq,m);
+    }
+}
 
 void limpaBuffer(){
     int c;
@@ -115,24 +140,29 @@ Venda criaVenda(Arv *arvVendas) {
         } while (strlen(new_venda.vendedor) == 0);
         new_venda.id = generateId(arvVendas);
     }else{
-        char matricula[50];
+        char matricula[5];
         int isValidFlag = 0;
+        NoArv *v;
         do {
             printf("\nDigite a Matricula do Vendedor: ");
             fgets(matricula, sizeof(matricula), stdin);
             matricula[strcspn(matricula, "\n")] = '\0';
+            v = buscaArvMatricula(arvVendas,matricula);
+            if(v == NULL){
+                printf("A matricula não existe.\n");
+            }
             if (strlen(matricula) == 0) {
                 printf("A matricula não pode ser vazio. Tente novamente.\n");
-            }else if()
+            }
 
-        } while ((strlen(new_venda.vendedor) == 0) && ());
+        } while ((strlen(new_venda.vendedor) == 0) && (v == NULL));
 
     }
 
     int flag_data;
     do {
         flag_data = 0;
-        printf("\nDigite a data de nascimento do pet (DD/MM/AAAA): ");
+        printf("\nDigite a data da transacao do pet (DD/MM/AAAA): ");
         itens_lidos = scanf("%d/%d/%d", &new_venda.transacao.dia, &new_venda.transacao.mes, &new_venda.transacao.ano);
         limpaBuffer();
         if(new_venda.transacao.dia > 31 || new_venda.transacao.dia < 1 || new_venda.transacao.mes > 12 || new_venda.transacao.mes < 1|| new_venda.transacao.ano < 1950 || new_venda.transacao.ano > 2025){
@@ -143,6 +173,18 @@ Venda criaVenda(Arv *arvVendas) {
             printf("Formato de data inválido. Tente novamente.\n");
         }
     } while (itens_lidos != 3 || flag_data);
+
+    int flag_data;
+    do {
+        flag_data = 0;
+        printf("\nDigite o valor da transacao: R$");
+        scanf("%f",&new_venda.valor);
+        limpaBuffer();
+        if(new_venda.valor < 0){
+            printf("\nValor invalido: deve ser positivo");
+        }
+
+    } while (new_venda.valor <= 0);
 
 
     return new_venda;
@@ -270,7 +312,6 @@ void liberarNo(NoArv* no){
 
 void imprimirVenda(Venda v){
     printf("\n\t%-3d | %*s | %*s | %*s |     %02d/%02d/%04d| %12s| %-5.2f\n",v.id,v.vendedor,v.matricula,v.cliente,v.transacao.dia,v.transacao.mes,v.transacao.ano,v.valor);
-
 }
 
 void imprimirDecrescente(NoArv* Pai)
