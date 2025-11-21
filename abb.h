@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 typedef struct data{
     int dia;
     int mes;
@@ -27,19 +28,45 @@ typedef struct Arvore{
     NoArv *raiz;
 }Arv;
 
-int generateRandomInt(){
+void limpaBuffer();
+int generateId(Arv *arvVendas);
 
-}
+NoArv* buscaArvId(NoArv *no, int n);
+NoArv* buscaArvMatricula(NoArv *no, char m[5]);
+void buscaImprimeMatricula(NoArv *no, char m[5]);
+void buscaImprimeNome(NoArv *no, char m[50]);
+Venda criaVenda(Arv *arvVendas);
+void vendasAcimaAbaixoValor(NoArv *no, float valor,int op);
+
+int idIsValid(Arv *arvVendas, int id);
+
+int totalVendas(NoArv *no);
+float totalFaturamento(NoArv *no);
+
+Arv* criaArvore();
+int ArvVazia(Arv *base);
+NoArv * auxInsere(NoArv *no, Venda v);
+void inserirArvore(Arv *Arvore, Venda v);
+NoArv* removeAux(NoArv* noArv, Venda v);
+Arv * removeNo(Arv* arvore, Venda v);
+
+void imprimirVenda(Venda v);
+void imprimirArvore(Arv *arvore, int ordem);
+void imprimirDecrescente(NoArv* Pai);
+void imprimirCrescente(NoArv* Pai);
 
 NoArv* buscaArvId(NoArv *no, int n){
-    if(no != NULL){
-        if(no->info.id > n){
-            aux_buscaArv(no->esq,n);
-        }else if(no->info.id < n){
-            aux_buscaArv(no->dir,n);
-        }else{
-            return no;
-        } 
+    if(no == NULL){
+        return NULL;
+    }
+    if(no->info.id == n){
+        return no;
+    }
+    if(no->info.id > n){
+        return buscaArvId(no->esq,n);
+    }
+    if(no->info.id < n){
+        return buscaArvId(no->dir,n);
     }
     return NULL;
 }
@@ -49,10 +76,10 @@ NoArv* buscaArvMatricula(NoArv *no, char m[5]){
         return no;
     }
     if(no->dir !=NULL){
-        aux_buscaArvMatricula(no->dir,m);
+        buscaArvMatricula(no->dir,m);
     }
     if(no->esq != NULL){
-        aux_buscaArvMatricula(no->esq,m);
+        buscaArvMatricula(no->esq,m);
     }
 }
 
@@ -61,10 +88,10 @@ void buscaImprimeMatricula(NoArv *no, char m[5]){
         printf("\n\t%-3d | %*s | %*s |     %02d/%02d/%04d| %12s| %-5.2f\n",no->info.id,no->info.cliente,no->info.transacao.dia,no->info.transacao.mes,no->info.transacao.ano,no->info.valor);
     }
     if(no->dir !=NULL){
-        aux_buscaArvMatricula(no->dir,m);
+        buscaImprimeMatricula(no->dir,m);
     }
     if(no->esq != NULL){
-        aux_buscaArvMatricula(no->esq,m);
+        buscaImprimeMatricula(no->esq,m);
     }
 }
 
@@ -73,10 +100,10 @@ void buscaImprimeNome(NoArv *no, char m[50]){
         printf("\n\t%-3d | %*s | %*s |     %02d/%02d/%04d| %12s| %-5.2f\n",no->info.id,no->info.cliente,no->info.transacao.dia,no->info.transacao.mes,no->info.transacao.ano,no->info.valor);
     }
     if(no->dir !=NULL){
-        aux_buscaArvNome(no->dir,m);
+        buscaImprimeNome(no->dir,m);
     }
     if(no->esq != NULL){
-        aux_buscaArvNome(no->esq,m);
+        buscaImprimeNome(no->esq,m);
     }
 }
 
@@ -85,7 +112,7 @@ void limpaBuffer(){
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
-int generateId(arvVendas){
+int generateId(Arv *arvVendas){
     int id;
     do{
         id = 100 + rand() % 900;
@@ -94,16 +121,16 @@ int generateId(arvVendas){
 }
 
 int idIsValid(Arv *arvVendas, int id){
-    NoArv *v = buscaArv(arvVendas,id);
+    NoArv *v = buscaArvId(arvVendas->raiz,id);
     if(v == NULL){
-        return 0;
+        return 1;
     }
-    return 1;
+    return 0;
 }
 
 Venda criaVenda(Arv *arvVendas) {
     Venda new_venda;
-
+    new_venda.id = generateId(arvVendas);
     do {
         printf("\nDigite o nome do cliente: ");
         fgets(new_venda.cliente, sizeof(new_venda.cliente), stdin);
@@ -118,11 +145,11 @@ Venda criaVenda(Arv *arvVendas) {
 
     do {
         printf("\nO vendedor já tem matricula? (S/n)");
-        itens_lidos = scanf(" %c", &temMatricula);
+        limpaBuffer();
+        itens_lidos = scanf("%c", &temMatricula);
         limpaBuffer();
 
         temMatricula = toupper(temMatricula);
-
         if (itens_lidos != 1 || (temMatricula != 'S' && temMatricula != 'N')) {
             printf("Opção inválida. Por favor, digite 'S' para sim ou 'N' para não.\n");
         }
@@ -138,7 +165,7 @@ Venda criaVenda(Arv *arvVendas) {
             }
 
         } while (strlen(new_venda.vendedor) == 0);
-        new_venda.id = generateId(arvVendas);
+        sprintf(new_venda.matricula,"V%03d\0",generateId(arvVendas));
     }else{
         char matricula[5];
         int isValidFlag = 0;
@@ -147,7 +174,7 @@ Venda criaVenda(Arv *arvVendas) {
             printf("\nDigite a Matricula do Vendedor: ");
             fgets(matricula, sizeof(matricula), stdin);
             matricula[strcspn(matricula, "\n")] = '\0';
-            v = buscaArvMatricula(arvVendas,matricula);
+            v = buscaArvMatricula(arvVendas->raiz,matricula);
             if(v == NULL){
                 printf("A matricula não existe.\n");
             }
@@ -174,7 +201,6 @@ Venda criaVenda(Arv *arvVendas) {
         }
     } while (itens_lidos != 3 || flag_data);
 
-    int flag_data;
     do {
         flag_data = 0;
         printf("\nDigite o valor da transacao: R$");
@@ -186,7 +212,7 @@ Venda criaVenda(Arv *arvVendas) {
 
     } while (new_venda.valor <= 0);
 
-
+    printf("dd");
     return new_venda;
 }
 
@@ -279,14 +305,18 @@ NoArv * auxInsere(NoArv *no, Venda v){
                         Pai=Pai->esq;
                     }
                 }
+                else{
+                    free(novo);
+                    flag=1;
+                }
             }
         }
     }
     return no;
 }
 
-void inserirArvore(Arv *Arvore, Venda v){
-    Arvore->raiz=auxInsere(Arvore->raiz,v);
+void inserirArvore(Arv *arvore, Venda v){
+    arvore->raiz=auxInsere(arvore->raiz,v);
 }
 
 NoArv* removeAux(NoArv* noArv, Venda v){
@@ -342,16 +372,8 @@ Arv * removeNo(Arv* arvore, Venda v){
     }
 }
 
-void liberarNo(NoArv* no){
-    if(no!=NULL){
-        liberarNo(no->esq);
-        liberarNo(no->dir);
-        free(no);
-    }
-}
-
 void imprimirVenda(Venda v){
-    printf("\n\t%-3d | %*s | %*s | %*s |     %02d/%02d/%04d| %12s| %-5.2f\n",v.id,v.vendedor,v.matricula,v.cliente,v.transacao.dia,v.transacao.mes,v.transacao.ano,v.valor);
+    printf("\n\t%-3d | %10s | %10s | %10s |         %02d/%02d/%04d| %-5.2f\n",v.id,v.vendedor,v.matricula,v.cliente,v.transacao.dia,v.transacao.mes,v.transacao.ano,v.valor);
 }
 
 void imprimirDecrescente(NoArv* Pai)
@@ -378,7 +400,7 @@ void imprimirCrescente(NoArv* Pai){
 }
 
 void imprimirArvore(Arv *arvore, int ordem){
-    printf("\n\t%-3d | %*s | %*s | %*s |     %02d/%02d/%04d| %12s| %-5.2f\n","ID","Vendedor","Matricula","Cliente","Data da Transação","Valor");
+    printf("\n\t%-3s | %10s | %10s | %10s | %s | %-5s\n","ID","Vendedor","Matricula","Cliente","Data da Transação","Valor");
     if(ordem){
         imprimirCrescente(arvore->raiz);
     }

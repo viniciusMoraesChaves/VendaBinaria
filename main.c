@@ -2,41 +2,34 @@
 #include <stdlib.h>
 #include <time.h>
 #include "abb.h"
+#include <string.h>
 
 
 
 int main(){
-    // Para garantir a unicidade das Matrículas deve-se criar uma árvore binária de busca (ABB) ou um Vetor Ordenado para armazenar as matrículas já utilizadas.
-    // A insersão de uma nova venda deve verificar se a matrícula do vendedor já existe na estrutura escolhida.
-    // Isso ocorrerá dessa forma:
-    // 1. Pergunta se o vendedor já está cadastrado.
-    // 2. Se sim, Pergunta a matrícula. Pergunta a metricula e verifica na estrutura se já existe.
-    // 3. Se não, Gera uma nova matrícula única e armazena nas estruturas.
-
-    // Vetor Ordenado
-    // Pros: Simples de implementar, fácil de entender.
-    // Cons: Inserção e remoção podem ser lentas (O(n)).
-
-    // Árvore Binária de Busca (ABB)
-    // Pros: Inserção, remoção e busca eficientes (O(log n) em média
-    // Cons: Mais complexa de implementar, requer mais memória.
-
+    setbuf(stdout, NULL);
     Arv *arvoreVendas = criaArvore();
+    srand(22);
     while (1)
     {
         int op;
-        printf("Escolha a Operação desejada: ");
+        printf("\nEscolha a Operação desejada: ");
         scanf("%d",&op);
         limpaBuffer();
         switch (op)
         {
-        case 1:
+        case 1:   
             Venda v = criaVenda(arvoreVendas);
             inserirArvore(arvoreVendas,v);
+            printf("\n\t%-3s | %10s | %10s | %10s | %s | %-5s\n","ID","Vendedor","Matricula","Cliente","Data da Transação","Valor");
             imprimirVenda(v);
             break;
         case 2:
-            imprimirArvore(arvoreVendas,0);
+            if(!ArvVazia(arvoreVendas)){
+                imprimirArvore(arvoreVendas,0);
+            }else{
+                printf("\nArvore Vazia");
+            }
             break;
         case 3: {
             int a=-1;
@@ -59,17 +52,16 @@ int main(){
                 printf("Qual a matrícula?");
                 char matricula[5];
                 fgets(matricula,sizeof(matricula),stdin);
-                matricula[strcspn(matricula, "\n")] = '\0'
+                matricula[strcspn(matricula, "\n")] = '\0';
 
                 buscaImprimeMatricula(arvoreVendas->raiz, matricula);
 
             }
-            break;
-        }
+        }break;
         case 4: {
             float valor=0;
             printf("Qual o Valor?");
-            scanf("%d", valor);
+            scanf("%d", &valor);
             int b=-1;
             do{
                 printf("Deseja buscar as vendas acima do valor(0) ou abaixo(1)?");
