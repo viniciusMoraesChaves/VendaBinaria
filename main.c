@@ -92,12 +92,13 @@ printf("       '-.,/ \n");
         }
         case 5: {
             int vendas = totalVendas(arvoreVendas->raiz);
-            int faturamento = totalFaturamento(arvoreVendas->raiz);
+            float faturamento = totalFaturamento(arvoreVendas->raiz);
 
             printf("Foi registrado um total de %d vendas.\n", vendas);
             printf("O faturamento dessas vendas foi de R$%d.\n", faturamento);
+            
             printf("A média de faturamento é de R$%d.\n",faturamento/vendas);
-            //printf("A maior venda foi de R$%d.\n",vendas);
+            printf("A maior venda foi de R$%.2f.\n",buscaMaiorVenda(arvoreVendas->raiz));
             //printf("A menor venda foi de R$%d.\n",vendas);
             //tabela de frequencias (max-min)/5 = intervalo 5 = n intevalos |freq.| freq. acum.| freq %| freq. acum. %|
 

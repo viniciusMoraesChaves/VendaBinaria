@@ -91,9 +91,27 @@ void buscaImprimeMatricula(NoArv *no, char m[5]){
     }
 }
 
+float buscaMaiorVenda(NoArv *no){
+    float maior = 0;
+    if(no != NULL){
+        maior = no->info.valor;
+        float maiorDir = buscaMaiorVenda(no->dir);
+        float maiorEsq = buscaMaiorVenda(no->esq);
+
+        if(maiorDir >= maiorEsq && maiorDir >= maior){
+            maior = maiorDir;
+        }else{
+            if(maiorEsq >= maiorDir && maiorEsq >= maior){
+                maior = maiorEsq;
+            }
+        }
+    }
+    return maior;
+}
+
 void buscaImprimeNome(NoArv *no, char m[50]){
     if(no != NULL){
-        if(strcmp(toupper(no->info.vendedor), toupper(m)) == 0){
+        if(strcasecmp(no->info.vendedor, m) == 0){
             printf("\n\t%-3d | %-20s | %02d/%02d/%04d | %-12s | %-5.2f\n",
                 no->info.id, no->info.cliente,
                 no->info.transacao.dia, no->info.transacao.mes, no->info.transacao.ano,
@@ -237,12 +255,16 @@ void vendasAcimaAbaixoValor(NoArv *no, float valor, int op){
 
 
 int totalVendas(NoArv *no){
-    if(no == NULL) return 0;
+    if(no == NULL){
+        return 0;
+    }
     return 1 + totalVendas(no->esq) + totalVendas(no->dir);
 }
 
 float totalFaturamento(NoArv *no){
-    if(no == NULL) return 0.0;
+    if(no == NULL){
+        return 0.0;
+    }
     return no->info.valor + totalFaturamento(no->esq) + totalFaturamento(no->dir);
 }
 
