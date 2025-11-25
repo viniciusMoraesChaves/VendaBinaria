@@ -17,8 +17,19 @@ int main(){
     srand(22);
     while (1)
     {
+printf("              .-'-'. \n");
+printf("       ______:      :\n");
+printf("      /'-. (_)\\\\,-'-'\n");
+printf("     /    '-.  \\\\\n");
+printf("    /        '-.\\\\\n");
+printf("   /  ..-/,     / \n");
+printf("  /  (_ /_     /\n");
+printf(" /     /  )   /\n");
+printf(" '-.'-/..-   /\n");
+printf("    '-.     /\n");
+printf("       '-.,/ \n");
         int op;
-        printf("\nEscolha a Operação desejada:\n[1] Adicionar venda \n[2] Imprimir todas as vendas \n[3] Buscar venda (por nome do vendedro ou matrícula) \n[4] Mostrar vendas acima ou abaixo de um certo valor \n[5] Mostrar o número de vendas e o faturamento \n[6] Remover vendas do sistema \n[7] Sair do Sistema \n\n\t>> Sua escolha:");
+        printf("\nEscolha a Operação desejada:\n[1] Adicionar venda \n[2] Imprimir todas as vendas \n[3] Buscar venda (por nome do vendedor ou matrícula) \n[4] Mostrar vendas acima ou abaixo de um certo valor \n[5] Mostrar o número de vendas e o faturamento \n[6] Remover vendas do sistema \n[7] Sair do Sistema \n\n\t>> Sua escolha:");
         scanf("%d",&op);
         limpaBuffer();
         switch (op)
@@ -26,7 +37,8 @@ int main(){
         case 1:
             Venda v = criaVenda(arvoreVendas);
             inserirArvore(arvoreVendas,v);
-            printf("\n\t%-3s | %10s | %10s | %10s | %s | %-5s\n","ID","Vendedor","Matricula","Cliente","Data da Transação","Valor");
+            printf("\n\t%-3s | %-10s | %-10s | %-10s | %-10s | %-5s\n",
+           "ID", "Vendedor", "Matricula", "Cliente", "Data", "Valor");
             imprimirVenda(v);
             break;
         case 2:

@@ -365,6 +365,8 @@ void imprimirVenda(Venda v){
            v.transacao.dia, v.transacao.mes, v.transacao.ano, v.valor);
 }
 
+//int maior_Cliente(Arv *Arvore){}
+
 void imprimirDecrescente(NoArv* Pai){
     if(Pai != NULL){
         imprimirDecrescente(Pai->dir);
