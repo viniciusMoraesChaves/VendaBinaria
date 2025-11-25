@@ -23,12 +23,13 @@ int main(){
         limpaBuffer();
         switch (op)
         {
-        case 1:
+        case 1:{
             Venda v = criaVenda(arvoreVendas);
             inserirArvore(arvoreVendas,v);
             printf("\n\t%-3s | %10s | %10s | %10s | %s | %-5s\n","ID","Vendedor","Matricula","Cliente","Data da Transação","Valor");
             imprimirVenda(v);
             break;
+        }
         case 2:
             if(!ArvVazia(arvoreVendas)){
                 imprimirArvore(arvoreVendas,0);
@@ -83,24 +84,49 @@ int main(){
 
             printf("Foi registrado um total de %d vendas.\n", vendas);
             printf("O faturamento dessas vendas foi de R$%d.\n", faturamento);
+            printf("A média de faturamento é de R$%d.\n",faturamento/vendas);
+            //printf("A maior venda foi de R$%d.\n",vendas);
+            //printf("A menor venda foi de R$%d.\n",vendas);
+            //tabela de frequencias (max-min)/5 = intervalo 5 = n intevalos |freq.| freq. acum.| freq %| freq. acum. %|
 
             break;
         }
         case 6: {
-            printf("Qual venda você gostaria de remover? (Inserir ID da venda)");
-            int ID=0;
-            scanf("%d", &ID);
 
-            Venda va;
-            NoArv *no;
-            no = buscaArvId(arvoreVendas->raiz,ID);
+            int flag = 0;
+            do{
+                printf("Qual venda você gostaria de remover? (Inserir ID da venda): ");
+                int ID=0;
+                scanf("%d", &ID);
+                Venda va;
+                NoArv *no;
+                no = buscaArvId(arvoreVendas->raiz,ID);
+                if(no != NULL){
+                    flag =1;
+                    va = no->info;
 
-            va = no->info;
+                    arvoreVendas=removeNo(arvoreVendas, va);
 
-            arvoreVendas=removeNo(arvoreVendas, va);
-
-            imprimirArvore(arvoreVendas,0);
-
+                    imprimirArvore(arvoreVendas,0);
+                }
+                else{
+                    flag = 0;
+                    printf("Digite um id válido. \n");
+                    int rever = -1;
+                    do{
+                        printf("\nVocê deseja rever suas vendas S = 1, N = 0: ");
+                        scanf("%d",&rever);
+                        limpaBuffer();
+                        if(rever == 1){
+                            flag = 1;
+                        }
+                        if(rever != 0 && rever != 1){
+                            printf("Digite um numero válido.\n");
+                            rever = -1;
+                        }
+                    }while(rever == -1);
+                }
+            }while(flag == 0);
 
             break;
 
