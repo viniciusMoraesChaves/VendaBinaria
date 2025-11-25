@@ -74,7 +74,8 @@ printf("       '-.,/ \n");
                 buscaImprimeMatricula(arvoreVendas->raiz, matricula);
 
             }
-        }break;
+            break;
+        }
         case 4: {
             float valor=0;
             printf("Qual o Valor?");
@@ -151,14 +152,20 @@ printf("       '-.,/ \n");
 
 
 
+
         default:
             break;
         }
         printf("\n\n");
         system("pause");
         system("cls");
+
+
     }
 
 
+
     return 0;
+
 }
+

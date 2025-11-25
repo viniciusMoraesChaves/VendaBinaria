@@ -93,7 +93,23 @@ void buscaImprimeMatricula(NoArv *no, char m[5]){
 
 void buscaImprimeNome(NoArv *no, char m[50]){
     if(no != NULL){
-        if(strcmp(toupper(no->info.vendedor), toupper(m)) == 0){
+        int i = 0;
+int iguais = 1;
+
+while (no->info.vendedor[i] && m[i]) {
+    if (toupper((unsigned char)no->info.vendedor[i]) !=
+        toupper((unsigned char)m[i])) {
+        iguais = 0;
+        break;
+    }
+    i++;
+}
+
+if (!(no->info.vendedor[i] == '\0' && m[i] == '\0'))
+    iguais = 0;
+
+if (iguais) {
+{
             printf("\n\t%-3d | %-20s | %02d/%02d/%04d | %-12s | %-5.2f\n",
                 no->info.id, no->info.cliente,
                 no->info.transacao.dia, no->info.transacao.mes, no->info.transacao.ano,
@@ -102,6 +118,7 @@ void buscaImprimeNome(NoArv *no, char m[50]){
         buscaImprimeNome(no->esq, m);
         buscaImprimeNome(no->dir, m);
     }
+}
 }
 
 
@@ -435,7 +452,7 @@ void imprimirDecrescente(NoArv* Pai,Arv *arvore){
 }
 
 void imprimirCrescente(NoArv* Pai,Arv *arvore){
-    if(Pai == NULL){
+    if(Pai != NULL){
         imprimirCrescente(Pai->esq, arvore);
         imprimirVenda(Pai->info, arvore);
         imprimirCrescente(Pai->dir, arvore);
