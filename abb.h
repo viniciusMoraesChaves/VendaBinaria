@@ -93,7 +93,7 @@ void buscaImprimeMatricula(NoArv *no, char m[5]){
 
 void buscaImprimeNome(NoArv *no, char m[50]){
     if(no != NULL){
-        if(strcmp(no->info.vendedor, m) == 0){
+        if(strcmp(toupper(no->info.vendedor), toupper(m)) == 0){
             printf("\n\t%-3d | %-20s | %02d/%02d/%04d | %-12s | %-5.2f\n",
                 no->info.id, no->info.cliente,
                 no->info.transacao.dia, no->info.transacao.mes, no->info.transacao.ano,
@@ -103,6 +103,8 @@ void buscaImprimeNome(NoArv *no, char m[50]){
         buscaImprimeNome(no->dir, m);
     }
 }
+
+
 
 void limpaBuffer(){
     int c;
@@ -232,6 +234,8 @@ void vendasAcimaAbaixoValor(NoArv *no, float valor, int op, Arv* arvore){
     }
 }
 
+
+
 int totalVendas(NoArv *no){
     if(no == NULL) return 0;
     return 1 + totalVendas(no->esq) + totalVendas(no->dir);
@@ -291,10 +295,6 @@ NoArv * auxInsere(NoArv *no, Venda v){
                         Pai=Pai->esq;
                     }
                 }
-                else{
-                    free(novo);
-                    flag=1;
-                }
             }
         }
     }
@@ -318,36 +318,36 @@ NoArv* removeAux(NoArv* noArv, Venda v){
         }
         else
         {
-        if((noArv->esq == NULL) && (noArv->dir == NULL)){
-            free(noArv);
-            return NULL;
-        }
-        else{
-            if(noArv->esq == NULL){
-                NoArv *aux = noArv;
-                noArv = noArv->dir;
-                free(aux);
-                return noArv;
+            if((noArv->esq == NULL) && (noArv->dir == NULL)){
+                free(noArv);
+                return NULL;
             }
             else{
-                if(noArv->dir ==NULL){
+                if(noArv->esq == NULL){
                     NoArv *aux = noArv;
-                    noArv = noArv->esq;
+                    noArv = noArv->dir;
                     free(aux);
                     return noArv;
                 }
                 else{
-                    NoArv *aux = noArv->esq;
-                    while(aux->dir != NULL){
-                        aux = aux->dir;
+                    if(noArv->dir ==NULL){
+                        NoArv *aux = noArv;
+                        noArv = noArv->esq;
+                        free(aux);
+                        return noArv;
                     }
-                    noArv->info = aux->info;
-                    aux->info = v;
-                    noArv->esq = removeAux(noArv->esq, v);
+                    else{
+                        NoArv *aux = noArv->esq;
+                        while(aux->dir != NULL){
+                            aux = aux->dir;
+                        }
+                        noArv->info = aux->info;
+                        aux->info = v;
+                        noArv->esq = removeAux(noArv->esq, v);
+                    }
                 }
             }
         }
-    }
     }
     return noArv;
 }
