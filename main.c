@@ -37,9 +37,8 @@ printf("       '-.,/ \n");
         case 1:
             Venda v = criaVenda(arvoreVendas);
             inserirArvore(arvoreVendas,v);
-            printf("\n\t%-3s  | %-10s | %-10s | %-10s | %-10s | %-5s\n",
-           "ID", "Vendedor", "Matricula", "Cliente", "Data", "Valor");
-            imprimirVenda(v);
+
+            imprimirVendaInicial(v, arvoreVendas);
             break;
         case 2:
             if(!ArvVazia(arvoreVendas)){
@@ -86,7 +85,7 @@ printf("       '-.,/ \n");
                 limpaBuffer();
             }while(b!=0 && b!=1);
 
-            vendasAcimaAbaixoValor(arvoreVendas->raiz, valor, b);
+            vendasAcimaAbaixoValor(arvoreVendas->raiz, valor, b, arvoreVendas);
         break;
         }
         case 5: {
