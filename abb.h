@@ -112,7 +112,7 @@ void limpaBuffer(){
 int generateId(Arv *arvVendas){
     int id;
     do{
-        id = 100 + rand() % 900;
+        id = 1000 + rand() % 900;
     } while(!idIsValid(arvVendas, id));
     return id;
 }
@@ -365,7 +365,7 @@ void imprimirVenda(Venda v){
            v.transacao.dia, v.transacao.mes, v.transacao.ano, v.valor);
 }
 
-//int maior_Cliente(Arv *Arvore){}
+int maior_Cliente(Arv *Arvore){}
 
 void imprimirDecrescente(NoArv* Pai){
     if(Pai != NULL){
@@ -384,7 +384,7 @@ void imprimirCrescente(NoArv* Pai){
 }
 
 void imprimirArvore(Arv *arvore, int ordem){
-    printf("\n\t%-3s | %-10s | %-10s | %-10s | %-10s | %-5s\n",
+    printf("\n\t%-3s  | %-10s | %-10s | %-10s | %-10s | %-5s\n",
            "ID", "Vendedor", "Matricula", "Cliente", "Data", "Valor");
     if(arvore->raiz != NULL) {
         if(ordem){

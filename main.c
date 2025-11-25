@@ -37,7 +37,7 @@ printf("       '-.,/ \n");
         case 1:
             Venda v = criaVenda(arvoreVendas);
             inserirArvore(arvoreVendas,v);
-            printf("\n\t%-3s | %-10s | %-10s | %-10s | %-10s | %-5s\n",
+            printf("\n\t%-3s  | %-10s | %-10s | %-10s | %-10s | %-5s\n",
            "ID", "Vendedor", "Matricula", "Cliente", "Data", "Valor");
             imprimirVenda(v);
             break;
