@@ -37,7 +37,7 @@ NoArv* buscaArvMatricula(NoArv *no, char m[5]);
 void buscaImprimeMatricula(NoArv *no, char m[5]);
 void buscaImprimeNome(NoArv *no, char m[50]);
 Venda criaVenda(Arv *arvVendas);
-void vendasAcimaAbaixoValor(NoArv *no, float valor, int op);
+void vendasAcimaAbaixoValor(NoArv *no, float valor, int op, Arv* arvore);
 int idIsValid(Arv *arvVendas, int id);
 int totalVendas(NoArv *no);
 float totalFaturamento(NoArv *no);
@@ -47,10 +47,10 @@ NoArv* auxInsere(NoArv *no, Venda v);
 void inserirArvore(Arv *Arvore, Venda v);
 NoArv* removeAux(NoArv* noArv, Venda v);
 Arv* removeNo(Arv* arvore, Venda v);
-void imprimirVenda(Venda v);
+void imprimirVenda(Venda v, Arv *arvore);
 void imprimirArvore(Arv *arvore, int ordem);
-void imprimirDecrescente(NoArv* Pai);
-void imprimirCrescente(NoArv* Pai);
+void imprimirDecrescente(NoArv* Pai, Arv *arvore);
+void imprimirCrescente(NoArv* Pai,Arv *arvore);
 
 NoArv* buscaArvId(NoArv *no, int n){
     if(no == NULL){
@@ -120,6 +120,7 @@ void buscaImprimeNome(NoArv *no, char m[50]){
         buscaImprimeNome(no->esq, m);
         buscaImprimeNome(no->dir, m);
     }
+}
 }
 
 
@@ -236,19 +237,19 @@ Venda criaVenda(Arv *arvVendas) {
     return new_venda;
 }
 
-void vendasAcimaAbaixoValor(NoArv *no, float valor, int op){
+void vendasAcimaAbaixoValor(NoArv *no, float valor, int op, Arv* arvore){
     if(no != NULL){
         if(op){
             if(no->info.valor < valor){
-                imprimirVenda(no->info);
+                imprimirVenda(no->info, arvore);
             }
         } else {
             if(no->info.valor > valor){
-                imprimirVenda(no->info);
+                imprimirVenda(no->info, arvore);
             }
         }
-        vendasAcimaAbaixoValor(no->dir, valor, op);
-        vendasAcimaAbaixoValor(no->esq, valor, op);
+        vendasAcimaAbaixoValor(no->dir, valor, op, arvore);
+        vendasAcimaAbaixoValor(no->esq, valor, op, arvore);
     }
 }
 
@@ -381,38 +382,99 @@ Arv* removeNo(Arv* arvore, Venda v){
     return arvore;
 }
 
-void imprimirVenda(Venda v){
-    printf("\n\t%-3d | %-10s | %-10s | %-10s | %02d/%02d/%04d | %-5.2f\n",
-           v.id, v.vendedor, v.matricula, v.cliente,
+int maior_Cliente(NoArv * raiz){
+    if (raiz == NULL) {
+        return 7;
+    }
+    int atual = strlen(raiz->info.cliente);
+
+    int esquerda = maior_Cliente(raiz->esq);
+    int direita = maior_Cliente(raiz->dir);
+
+    int max = atual;
+    if (esquerda>max){
+        max = esquerda;
+    }
+    if (direita>max){
+        max = direita;
+    }
+
+    if (max<7){
+        max = 7;
+    }
+
+    return max;
+}
+
+int maior_Vendedor(NoArv * raiz){
+    if (raiz == NULL) {
+        return 8;
+    }
+    int atual = strlen(raiz->info.vendedor);
+
+    int esquerda = maior_Vendedor(raiz->esq);
+    int direita = maior_Vendedor(raiz->dir);
+
+    int max = atual;
+    if (esquerda>max){
+        max = esquerda;
+    }
+    if (direita>max){
+        max = direita;
+    }
+
+    if (max<8){
+        max = 8;
+    }
+
+    return max;
+}
+
+void imprimirVendaInicial(Venda v,Arv * arvore){
+    int maiorVendedor = maior_Vendedor(arvore->raiz);
+    int maiorCliente = maior_Cliente(arvore->raiz);
+    printf("\n\t%-3s  | %-*s | %-10s | %-*s | %-10s | %-5s\n",
+           "ID",maiorVendedor, "Vendedor", "Matricula",maiorCliente, "Cliente", "Data", "Valor");
+    printf("\n\t%-3d | %-*s | %-10s | %-*s | %02d/%02d/%04d | %-5.2f\n",
+           v.id,maiorVendedor, v.vendedor, v.matricula,maiorCliente, v.cliente,
            v.transacao.dia, v.transacao.mes, v.transacao.ano, v.valor);
 }
 
-int maior_Cliente(Arv *Arvore){}
+void imprimirVenda(Venda v,Arv * arvore){
+    int maiorVendedor = maior_Vendedor(arvore->raiz);
+    int maiorCliente = maior_Cliente(arvore->raiz);
+    printf("\n\t%-3d | %-*s | %-10s | %-*s | %02d/%02d/%04d | %-5.2f\n",
+           v.id,maiorVendedor, v.vendedor, v.matricula,maiorCliente, v.cliente,
+           v.transacao.dia, v.transacao.mes, v.transacao.ano, v.valor);
+}
 
-void imprimirDecrescente(NoArv* Pai){
+
+void imprimirDecrescente(NoArv* Pai,Arv *arvore){
     if(Pai != NULL){
-        imprimirDecrescente(Pai->dir);
-        imprimirVenda(Pai->info);
-        imprimirDecrescente(Pai->esq);
+        imprimirDecrescente(Pai->dir, arvore);
+        imprimirVenda(Pai->info, arvore);
+        imprimirDecrescente(Pai->esq, arvore);
     }
 }
 
-void imprimirCrescente(NoArv* Pai){
-    if(Pai == NULL){
-        imprimirCrescente(Pai->esq);
-        imprimirVenda(Pai->info);
-        imprimirCrescente(Pai->dir);
+void imprimirCrescente(NoArv* Pai,Arv *arvore){
+    if(Pai != NULL){
+        imprimirCrescente(Pai->esq, arvore);
+        imprimirVenda(Pai->info, arvore);
+        imprimirCrescente(Pai->dir, arvore);
     }
 }
 
 void imprimirArvore(Arv *arvore, int ordem){
-    printf("\n\t%-3s  | %-10s | %-10s | %-10s | %-10s | %-5s\n",
-           "ID", "Vendedor", "Matricula", "Cliente", "Data", "Valor");
+    int maiorVendedor = maior_Vendedor(arvore->raiz);
+    int maiorCliente = maior_Cliente(arvore->raiz);
+    printf("\n\t%-3s  | %-*s | %-10s | %-*s | %-10s | %-5s\n",
+           "ID",maiorVendedor, "Vendedor", "Matricula",maiorCliente, "Cliente", "Data", "Valor");
     if(arvore->raiz != NULL) {
         if(ordem){
-            imprimirCrescente(arvore->raiz);
+            imprimirCrescente(arvore->raiz,arvore);
         } else {
-            imprimirDecrescente(arvore->raiz);
+            imprimirDecrescente(arvore->raiz,arvore);
         }
     }
 }
