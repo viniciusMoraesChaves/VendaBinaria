@@ -99,7 +99,7 @@ printf("       '-.,/ \n");
 
             printf("A média de faturamento é de R$%d.\n",faturamento/vendas);
             printf("A maior venda foi de R$%.2f.\n",buscaMaiorVenda(arvoreVendas->raiz));
-            //printf("A menor venda foi de R$%d.\n",vendas);
+            printf("A menor venda foi de R$%.2f.\n",buscaMenorVenda(arvoreVendas->raiz));
             //tabela de frequencias (max-min)/5 = intervalo 5 = n intevalos |freq.| freq. acum.| freq %| freq. acum. %|
 
             break;

@@ -92,22 +92,43 @@ void buscaImprimeMatricula(NoArv *no, char m[5]){
 }
 
 float buscaMaiorVenda(NoArv *no){
-    float maior = 0;
-    if(no != NULL){
-        maior = no->info.valor;
-        float maiorDir = buscaMaiorVenda(no->dir);
-        float maiorEsq = buscaMaiorVenda(no->esq);
-
-        if(maiorDir >= maiorEsq && maiorDir >= maior){
-            maior = maiorDir;
-        }else{
-            if(maiorEsq >= maiorDir && maiorEsq >= maior){
-                maior = maiorEsq;
-            }
-        }
+    if(no == NULL){
+        return -1;
     }
+
+    float maior = no->info.valor;
+
+    float maiorEsq = buscaMaiorVenda(no->esq);
+    float maiorDir = buscaMaiorVenda(no->dir);
+
+    if(maiorEsq > maior){
+        maior = maiorEsq;
+    }
+
+    if(maiorDir > maior){
+        maior = maiorDir;
+    }
+
     return maior;
 }
+
+
+float buscaMenorVenda(NoArv *no){
+    if(no == NULL) return -1;
+
+    float menor = no->info.valor;
+
+    float menorEsq = buscaMenorVenda(no->esq);
+    if(menorEsq != -1 && menorEsq < menor)
+        menor = menorEsq;
+
+    float menorDir = buscaMenorVenda(no->dir);
+    if(menorDir != -1 && menorDir < menor)
+        menor = menorDir;
+
+    return menor;
+}
+
 
 void buscaImprimeNome(NoArv *no, char m[50]){
     if(no != NULL){
