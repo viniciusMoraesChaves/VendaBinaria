@@ -121,7 +121,7 @@ void buscaImprimeNome(NoArv *no, char m[50]){
         buscaImprimeNome(no->dir, m);
     }
 }
-}
+
 
 
 
