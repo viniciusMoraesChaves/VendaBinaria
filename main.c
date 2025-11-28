@@ -29,7 +29,7 @@ printf(" '-.'-/..-   /\n");
 printf("    '-.     /\n");
 printf("       '-.,/ \n");
         int op;
-        printf("\nEscolha a Operação desejada:\n[1] Adicionar venda \n[2] Imprimir todas as vendas \n[3] Buscar venda (por nome do vendedor ou matrícula) \n[4] Mostrar vendas acima ou abaixo de um certo valor \n[5] Mostrar o número de vendas, o faturamento, a média de faturamento e a maior venda \n[6] Remover vendas do sistema \n[7] Sair do Sistema \n\n\t>> Sua escolha:");
+        printf("\nEscolha a Operação desejada:\n[1] Adicionar venda \n[2] Imprimir todas as vendas \n[3] Buscar venda (por nome do vendedor ou matrícula) \n[4] Mostrar vendas acima ou abaixo de um certo valor \n[5] Mostrar o número de vendas, o faturamento, a média de faturamento, a maior e a menor venda \n[6] Remover vendas do sistema \n[7] Sair do Sistema \n\n\t>> Sua escolha:");
         scanf("%d",&op);
         limpaBuffer();
         switch (op)
@@ -95,9 +95,9 @@ printf("       '-.,/ \n");
             float faturamento = totalFaturamento(arvoreVendas->raiz);
 
             printf("Foi registrado um total de %d vendas.\n", vendas);
-            printf("O faturamento dessas vendas foi de R$%d.\n", faturamento);
+            printf("O faturamento dessas vendas foi de R$%.2f.\n", faturamento);
 
-            printf("A média de faturamento é de R$%d.\n",faturamento/vendas);
+            printf("A média de faturamento é de R$%.2f.\n",faturamento/vendas);
             printf("A maior venda foi de R$%.2f.\n",buscaMaiorVenda(arvoreVendas->raiz));
             printf("A menor venda foi de R$%.2f.\n",buscaMenorVenda(arvoreVendas->raiz));
             //tabela de frequencias (max-min)/5 = intervalo 5 = n intevalos |freq.| freq. acum.| freq %| freq. acum. %|
