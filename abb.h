@@ -34,8 +34,8 @@ void limpaBuffer();
 int generateId(Arv *arvVendas);
 NoArv* buscaArvId(NoArv *no, int n);
 NoArv* buscaArvMatricula(NoArv *no, char m[5]);
-void buscaImprimeMatricula(NoArv *no, char m[5]);
-void buscaImprimeNome(NoArv *no, char m[50]);
+void buscaImprimeMatricula(NoArv *no, char m[5], Arv * arvore);
+void buscaImprimeNome(NoArv *no, char m[50], Arv * arvore);
 Venda criaVenda(Arv *arvVendas);
 void vendasAcimaAbaixoValor(NoArv *no, float valor, int op, Arv* arvore);
 int idIsValid(Arv *arvVendas, int id);
@@ -51,6 +51,8 @@ void imprimirVenda(Venda v, Arv *arvore);
 void imprimirArvore(Arv *arvore, int ordem);
 void imprimirDecrescente(NoArv* Pai, Arv *arvore);
 void imprimirCrescente(NoArv* Pai,Arv *arvore);
+int maior_Cliente(NoArv * raiz);
+int maior_Vendedor(NoArv * raiz);
 
 NoArv* buscaArvId(NoArv *no, int n){
     if(no == NULL){
@@ -78,16 +80,17 @@ NoArv* buscaArvMatricula(NoArv *no, char m[5]){
     return buscaArvMatricula(no->dir, m);
 }
 
-void buscaImprimeMatricula(NoArv *no, char m[5]){
+void buscaImprimeMatricula(NoArv *no, char m[5], Arv * arvore){
+    int maiorCliente = maior_Cliente(arvore->raiz);
     if(no != NULL){
         if(strcmp(no->info.matricula, m) == 0){
-            printf("\n\t%-3d | %-20s | %02d/%02d/%04d | %-12s | %-5.2f\n",
-                no->info.id, no->info.cliente,
+            printf("\n\t%-3d | %-*s | %02d/%02d/%04d | %-6s | %-5.2f\n",
+                no->info.id,maiorCliente, no->info.cliente,
                 no->info.transacao.dia, no->info.transacao.mes, no->info.transacao.ano,
                 no->info.matricula, no->info.valor);
         }
-        buscaImprimeMatricula(no->esq, m);
-        buscaImprimeMatricula(no->dir, m);
+        buscaImprimeMatricula(no->esq, m, arvore);
+        buscaImprimeMatricula(no->dir, m, arvore);
     }
 }
 
@@ -130,16 +133,17 @@ float buscaMenorVenda(NoArv *no){
 }
 
 
-void buscaImprimeNome(NoArv *no, char m[50]){
+void buscaImprimeNome(NoArv *no, char m[50], Arv * arvore){
+    int maiorCliente = maior_Cliente(arvore->raiz);
     if(no != NULL){
         if(strcasecmp(no->info.vendedor, m) == 0){
-            printf("\n\t%-3d | %-20s | %02d/%02d/%04d | %-12s | %-5.2f\n",
-                no->info.id, no->info.cliente,
+            printf("\n\t%-3d | %-*s | %02d/%02d/%04d | %-6s | %-5.2f\n",
+                no->info.id,maiorCliente, no->info.cliente,
                 no->info.transacao.dia, no->info.transacao.mes, no->info.transacao.ano,
                 no->info.matricula, no->info.valor);
         }
-        buscaImprimeNome(no->esq, m);
-        buscaImprimeNome(no->dir, m);
+        buscaImprimeNome(no->esq, m, arvore);
+        buscaImprimeNome(no->dir, m, arvore);
     }
 }
 
@@ -154,9 +158,15 @@ void limpaBuffer(){
 int generateId(Arv *arvVendas){
     int id;
     do{
-        id = 1000 + rand() % 900;
+        id = 1000 + rand() % 1000;
     } while(!idIsValid(arvVendas, id));
     return id;
+}
+
+int generateMatricula(Arv *arvVendas) {
+    int matricula = 100 + rand() % 900;
+    return matricula;
+
 }
 
 int idIsValid(Arv *arvVendas, int id){
@@ -202,7 +212,7 @@ Venda criaVenda(Arv *arvVendas) {
                 printf("O nome nao pode ser vazio. Tente novamente.\n");
             }
         } while (strlen(new_venda.vendedor) == 0);
-        sprintf(new_venda.matricula, "V%03d", generateId(arvVendas));
+        sprintf(new_venda.matricula, "V%03d", generateMatricula(arvVendas));
     } else {
         char matricula[5];
         NoArv *v;

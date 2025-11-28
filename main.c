@@ -62,7 +62,7 @@ printf("       '-.,/ \n");
                 fgets(nome,sizeof(nome),stdin);
                 nome[strcspn(nome, "\n")] = '\0';
 
-                buscaImprimeNome(arvoreVendas->raiz, nome);
+                buscaImprimeNome(arvoreVendas->raiz, nome, arvoreVendas);
 
             }
             if(a==1) {
@@ -71,7 +71,7 @@ printf("       '-.,/ \n");
                 fgets(matricula,sizeof(matricula),stdin);
                 matricula[strcspn(matricula, "\n")] = '\0';
 
-                buscaImprimeMatricula(arvoreVendas->raiz, matricula);
+                buscaImprimeMatricula(arvoreVendas->raiz, matricula, arvoreVendas);
 
             }
             break;
