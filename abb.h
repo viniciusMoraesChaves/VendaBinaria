@@ -193,17 +193,53 @@ Venda criaVenda(Arv *arvVendas) {
     int itens_lidos;
     char temMatricula;
 
-    do {
-        printf("\nO vendedor ja tem matricula? (S/n): ");
-        itens_lidos = scanf("%c", &temMatricula);
-        limpaBuffer();
-        temMatricula = toupper(temMatricula);
-        if (itens_lidos != 1 || (temMatricula != 'S' && temMatricula != 'N')) {
-            printf("Opcao invalida. Por favor, digite 'S' para sim ou 'N' para nao.\n");
-        }
-    } while (itens_lidos != 1 || (temMatricula != 'S' && temMatricula != 'N'));
+    if(!ArvVazia(arvVendas))
+    {
+        do {
+            printf("\nO vendedor ja tem matricula? (S/n): ");
+            itens_lidos = scanf("%c", &temMatricula);
+            limpaBuffer();
+            temMatricula = toupper(temMatricula);
+            if (itens_lidos != 1 || (temMatricula != 'S' && temMatricula != 'N')) {
+                printf("Opcao invalida. Por favor, digite 'S' para sim ou 'N' para nao.\n");
+            }
+        } while (itens_lidos != 1 || (temMatricula != 'S' && temMatricula != 'N'));
 
-    if(temMatricula == 'N'){
+        if(temMatricula == 'N'){
+            do {
+                printf("\nDigite o nome do Vendedor: ");
+                fgets(new_venda.vendedor, sizeof(new_venda.vendedor), stdin);
+                new_venda.vendedor[strcspn(new_venda.vendedor, "\n")] = '\0';
+                if (strlen(new_venda.vendedor) == 0) {
+                    printf("O nome nao pode ser vazio. Tente novamente.\n");
+                }
+            } while (strlen(new_venda.vendedor) == 0);
+            sprintf(new_venda.matricula, "V%03d", generateMatricula(arvVendas));
+        } else {
+            char matricula[5];
+            NoArv *v;
+            int found = 0;
+            do {
+                printf("\nDigite a Matricula do Vendedor: ");
+                fgets(matricula, sizeof(matricula), stdin);
+                matricula[strcspn(matricula, "\n")] = '\0';
+
+                if (strlen(matricula) == 0) {
+                    printf("A matricula nao pode ser vazia.\n");
+                    continue;
+                }
+
+                v = buscaArvMatricula(arvVendas->raiz, matricula);
+                if(v == NULL){
+                    printf("A matricula nao existe.\n");
+                } else {
+                    strcpy(new_venda.vendedor, v->info.vendedor);
+                    strcpy(new_venda.matricula, matricula);
+                    found = 1;
+                }
+            } while (!found);
+        }
+    }else{
         do {
             printf("\nDigite o nome do Vendedor: ");
             fgets(new_venda.vendedor, sizeof(new_venda.vendedor), stdin);
@@ -211,32 +247,10 @@ Venda criaVenda(Arv *arvVendas) {
             if (strlen(new_venda.vendedor) == 0) {
                 printf("O nome nao pode ser vazio. Tente novamente.\n");
             }
-        } while (strlen(new_venda.vendedor) == 0);
-        sprintf(new_venda.matricula, "V%03d", generateMatricula(arvVendas));
-    } else {
-        char matricula[5];
-        NoArv *v;
-        int found = 0;
-        do {
-            printf("\nDigite a Matricula do Vendedor: ");
-            fgets(matricula, sizeof(matricula), stdin);
-            matricula[strcspn(matricula, "\n")] = '\0';
-
-            if (strlen(matricula) == 0) {
-                printf("A matricula nao pode ser vazia.\n");
-                continue;
-            }
-
-            v = buscaArvMatricula(arvVendas->raiz, matricula);
-            if(v == NULL){
-                printf("A matricula nao existe.\n");
-            } else {
-                strcpy(new_venda.vendedor, v->info.vendedor);
-                strcpy(new_venda.matricula, matricula);
-                found = 1;
-            }
-        } while (!found);
+            } while (strlen(new_venda.vendedor) == 0);
+            sprintf(new_venda.matricula, "V%03d", generateMatricula(arvVendas));
     }
+
 
     int flag_data;
     do {
