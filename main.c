@@ -17,17 +17,17 @@ int main(){
     srand(22);
     while (1)
     {
-printf("              .-'-'. \n");
-printf("       ______:      :\n");
-printf("      /'-. (_)\\\\,-'-'\n");
-printf("     /    '-.  \\\\\n");
-printf("    /        '-.\\\\\n");
-printf("   /  ..-/,     / \n");
-printf("  /  (_ /_     /\n");
-printf(" /     /  )   /\n");
-printf(" '-.'-/..-   /\n");
-printf("    '-.     /\n");
-printf("       '-.,/ \n");
+        printf("              .-'-'. \n");
+        printf("       ______:      :\n");
+        printf("      /'-. (_)\\\\,-'-'\n");
+        printf("     /    '-.  \\\\\n");
+        printf("    /        '-.\\\\\n");
+        printf("   /  ..-/,     / \n");
+        printf("  /  (_ /_     /\n");
+        printf(" /     /  )   /\n");
+        printf(" '-.'-/..-   /\n");
+        printf("    '-.     /\n");
+        printf("       '-.,/ \n");
         int op;
         printf("\nEscolha a Operação desejada:\n[1] Adicionar venda \n[2] Imprimir todas as vendas \n[3] Buscar venda (por nome do vendedor ou matrícula) \n[4] Mostrar vendas acima ou abaixo de um certo valor \n[5] Mostrar o número de vendas, o faturamento, a média de faturamento, a maior e a menor venda \n[6] Remover vendas do sistema \n[7] Sair do Sistema \n\n\t>> Sua escolha:");
         scanf("%d",&op);
@@ -41,13 +41,25 @@ printf("       '-.,/ \n");
             imprimirVendaInicial(v, arvoreVendas);
             break;
         }
-        case 2:
+        case 2:{
+            int temp;
+            do{
+                printf("\nComo deseja imprimit?");
+                printf("\n[0] Decrescente");
+                printf("\n[1] Crescente");
+                printf("\n\t>> Sua escolha:");
+                scanf("%d",&temp);
+                if(temp != 0 && temp !=1){
+                    printf("\nOpção inválida! Digite novamente.");
+                }
+            }while(temp != 0 && temp !=1);
             if(!ArvVazia(arvoreVendas)){
-                imprimirArvore(arvoreVendas,0);
+                imprimirArvore(arvoreVendas,temp);
             }else{
                 printf("\nArvore Vazia");
             }
             break;
+        }
         case 3: {
             int a=-1;
             do{
