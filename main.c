@@ -47,6 +47,7 @@ int main(){
                 printf("\n[1] ID Crescente");
                 printf("\n\t>> Sua escolha:");
                 scanf("%d",&temp);
+                limpaBuffer();
                 if(temp != 0 && temp !=1){
                     printf("\nOpção inválida! Digite novamente.");
                 }
@@ -65,24 +66,28 @@ int main(){
                 scanf("%d", &a);
                 limpaBuffer();
             }while(a!=0 && a!=1);
-
-            if(a==0) {
+            if(ArvVazia(arvoreVendas)){
+                printf("\nArvore Vazia");
+            }
+            else{
+                if(a==0) {
                 printf("Qual o nome do vendedor?");
                 char nome[50];
                 fgets(nome,sizeof(nome),stdin);
                 nome[strcspn(nome, "\n")] = '\0';
 
-                buscaImprimeNome(arvoreVendas->raiz, nome, arvoreVendas);
+                buscaImprimeNome(arvoreVendas, nome, arvoreVendas);
 
-            }
-            if(a==1) {
-                printf("Qual a matrícula?");
-                char matricula[5];
-                fgets(matricula,sizeof(matricula),stdin);
-                matricula[strcspn(matricula, "\n")] = '\0';
+                }
+                if(a==1) {
+                    printf("Qual a matrícula?");
+                    char matricula[5];
+                    fgets(matricula,sizeof(matricula),stdin);
+                    matricula[strcspn(matricula, "\n")] = '\0';
 
-                buscaImprimeMatricula(arvoreVendas->raiz, matricula, arvoreVendas);
+                    buscaImprimeMatricula(arvoreVendas, matricula, arvoreVendas);
 
+                }
             }
             break;
         }

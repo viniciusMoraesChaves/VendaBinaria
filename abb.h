@@ -34,8 +34,9 @@ void limpaBuffer();
 int generateId(Arv *arvVendas);
 NoArv* buscaArvId(NoArv *no, int n);
 NoArv* buscaArvMatricula(NoArv *no, char m[5]);
-void buscaImprimeMatricula(NoArv *no, char m[5], Arv * arvore);
-void buscaImprimeNome(NoArv *no, char m[50], Arv * arvore);
+void buscaImprimeMatricula(Arv *arv, char m[5], Arv * arvore);
+void aux_buscaImprimeMatricula(NoArv *no, char m[5], int maiorCliente);
+void buscaImprimeNome(Arv *arv, char m[5], Arv * arvore);
 Venda criaVenda(Arv *arvVendas);
 void vendasAcimaAbaixoValor(NoArv *no, float valor, int op, Arv* arvore);
 int idIsValid(Arv *arvVendas, int id);
@@ -80,20 +81,6 @@ NoArv* buscaArvMatricula(NoArv *no, char m[5]){
     return buscaArvMatricula(no->dir, m);
 }
 
-void buscaImprimeMatricula(NoArv *no, char m[5], Arv * arvore){
-    int maiorCliente = maior_Cliente(arvore->raiz);
-    if(no != NULL){
-        if(strcmp(no->info.matricula, m) == 0){
-            printf("\n\t%-3d | %-*s | %02d/%02d/%04d | %-6s | %-5.2f\n",
-                no->info.id,maiorCliente, no->info.cliente,
-                no->info.transacao.dia, no->info.transacao.mes, no->info.transacao.ano,
-                no->info.matricula, no->info.valor);
-        }
-        buscaImprimeMatricula(no->esq, m, arvore);
-        buscaImprimeMatricula(no->dir, m, arvore);
-    }
-}
-
 float buscaMaiorVenda(NoArv *no){
     if(no == NULL){
         return -1;
@@ -132,9 +119,26 @@ float buscaMenorVenda(NoArv *no){
     return menor;
 }
 
+void aux_buscaImprimeMatricula(NoArv *no, char m[5], int maiorCliente){
+    
+    if(no != NULL){
+        if(strcmp(no->info.matricula, m) == 0){
+            printf("\n\t%-3d | %-*s | %02d/%02d/%04d | %-6s | %-5.2f\n",
+                no->info.id,maiorCliente, no->info.cliente,
+                no->info.transacao.dia, no->info.transacao.mes, no->info.transacao.ano,
+                no->info.matricula, no->info.valor);
+        }
+        aux_buscaImprimeMatricula(no->esq, m, maiorCliente);
+        aux_buscaImprimeMatricula(no->dir, m, maiorCliente);
+    }
+}
 
-void buscaImprimeNome(NoArv *no, char m[50], Arv * arvore){
+void buscaImprimeMatricula(Arv *arv, char m[5], Arv * arvore){
     int maiorCliente = maior_Cliente(arvore->raiz);
+    aux_buscaImprimeMatricula(arv->raiz, m, maiorCliente);
+}
+
+void aux_buscaImprimeNome(NoArv *no, char m[50], int maiorCliente){
     if(no != NULL){
         if(strcasecmp(no->info.vendedor, m) == 0){
             printf("\n\t%-3d | %-*s | %02d/%02d/%04d | %-6s | %-5.2f\n",
@@ -142,12 +146,15 @@ void buscaImprimeNome(NoArv *no, char m[50], Arv * arvore){
                 no->info.transacao.dia, no->info.transacao.mes, no->info.transacao.ano,
                 no->info.matricula, no->info.valor);
         }
-        buscaImprimeNome(no->esq, m, arvore);
-        buscaImprimeNome(no->dir, m, arvore);
+        aux_buscaImprimeNome(no->esq, m, maiorCliente);
+        aux_buscaImprimeNome(no->dir, m, maiorCliente);
     }
 }
 
-
+void buscaImprimeNome(Arv *arv, char m[5], Arv * arvore){
+    int maiorCliente = maior_Cliente(arvore->raiz);
+    aux_buscaImprimeNome(arv->raiz, m, maiorCliente);
+}
 
 
 void limpaBuffer(){
