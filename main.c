@@ -42,9 +42,9 @@ int main(){
         case 2:{
             int temp;
             do{
-                printf("\nComo deseja imprimit?");
-                printf("\n[0] Decrescente");
-                printf("\n[1] Crescente");
+                printf("\nComo deseja imprimir?");
+                printf("\n[0] ID Decrescente");
+                printf("\n[1] ID Crescente");
                 printf("\n\t>> Sua escolha:");
                 scanf("%d",&temp);
                 if(temp != 0 && temp !=1){
@@ -103,13 +103,26 @@ int main(){
         case 5: {
             int vendas = totalVendas(arvoreVendas->raiz);
             float faturamento = totalFaturamento(arvoreVendas->raiz);
+            float media = 0;
+            if (vendas > 0) {
+                media = faturamento / vendas;
+            } else {
+                media = 0;
+            }
+            float maiorVenda = buscaMaiorVenda(arvoreVendas->raiz);
+            float menorVenda = buscaMenorVenda(arvoreVendas->raiz);
+            if (maiorVenda==-1)
+            {
+                maiorVenda=0;
+                menorVenda=0;
+            }
 
             printf("Foi registrado um total de %d vendas.\n", vendas);
             printf("O faturamento dessas vendas foi de R$%.2f.\n", faturamento);
 
-            printf("A média de faturamento é de R$%.2f.\n",faturamento/vendas);
-            printf("A maior venda foi de R$%.2f.\n",buscaMaiorVenda(arvoreVendas->raiz));
-            printf("A menor venda foi de R$%.2f.\n",buscaMenorVenda(arvoreVendas->raiz));
+            printf("A média de faturamento é de R$%.2f.\n",media);
+            printf("A maior venda foi de R$%.2f.\n",maiorVenda);
+            printf("A menor venda foi de R$%.2f.\n",menorVenda);
 
             break;
         }
