@@ -11,8 +11,6 @@
 int main(){
     setlocale(LC_ALL, "pt_BR.utf8");
 
-
-    setbuf(stdout, NULL);
     Arv *arvoreVendas = criaArvore();
     srand(22);
     while (1)
